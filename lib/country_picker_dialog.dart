@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/countries.dart';
-import 'package:intl_phone_field/helpers.dart';
 
 class PickerDialogStyle {
   final Color? backgroundColor;
@@ -80,79 +79,105 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
   @override
   Widget build(BuildContext context) {
     final mediaWidth = MediaQuery.of(context).size.width;
-    final width = widget.style?.width ?? mediaWidth;
-    const defaultHorizontalPadding = 40.0;
-    const defaultVerticalPadding = 24.0;
-    return Dialog(
-      insetPadding: EdgeInsets.symmetric(
-          vertical: defaultVerticalPadding,
-          horizontal: mediaWidth > (width + defaultHorizontalPadding * 2)
-              ? (mediaWidth - width) / 2
-              : defaultHorizontalPadding),
-      backgroundColor: widget.style?.backgroundColor,
-      child: Container(
-        padding: widget.style?.padding ?? const EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: widget.style?.searchFieldPadding ?? const EdgeInsets.all(0),
-              child: TextField(
-                cursorColor: widget.style?.searchFieldCursorColor,
-                decoration: widget.style?.searchFieldInputDecoration ??
-                    InputDecoration(
-                      suffixIcon: const Icon(Icons.search),
-                      labelText: widget.searchText,
-                    ),
-                onChanged: (value) {
-                  _filteredCountries = widget.countryList.stringSearch(value)
-                    ..sort(
-                      (a, b) => a.localizedName(widget.languageCode).compareTo(b.localizedName(widget.languageCode)),
-                    );
-                  if (mounted) setState(() {});
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _filteredCountries.length,
-                itemBuilder: (ctx, index) => Column(
-                  children: <Widget>[
-                    ListTile(
-                      leading: kIsWeb
-                          ? Image.asset(
-                              'assets/flags/${_filteredCountries[index].code.toLowerCase()}.png',
-                              package: 'intl_phone_field',
-                              width: 32,
-                            )
-                          : Text(
-                              _filteredCountries[index].flag,
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                      contentPadding: widget.style?.listTilePadding,
-                      title: Text(
-                        _filteredCountries[index].localizedName(widget.languageCode),
-                        style: widget.style?.countryNameStyle ?? const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      trailing: Text(
-                        '+${_filteredCountries[index].dialCode}',
-                        style: widget.style?.countryCodeStyle ?? const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      onTap: () {
-                        _selectedCountry = _filteredCountries[index];
-                        widget.onCountryChanged(_selectedCountry);
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    widget.style?.listTileDivider ?? const Divider(thickness: 1),
-                  ],
-                ),
-              ),
-            ),
-          ],
+    // final width = widget.style?.width ?? mediaWidth;
+    // const defaultHorizontalPadding = 40.0;
+    // const defaultVerticalPadding = 24.0;
+    return Column(
+      children: [
+        //* create center container with grey background
+        Container(
+          width: mediaWidth,
+          height: 50,
+          color: Colors.grey[300],
         ),
-      ),
+
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _filteredCountries.length,
+            itemBuilder: (ctx, index) => Column(
+              children: <Widget>[
+                ListTile(
+                  leading: kIsWeb
+                      ? Image.asset(
+                          'assets/flags/${_filteredCountries[index].code.toLowerCase()}.png',
+                          package: 'intl_phone_field',
+                          width: 32,
+                        )
+                      : Text(
+                          _filteredCountries[index].flag,
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                  contentPadding: widget.style?.listTilePadding,
+                  title: Text(
+                    _filteredCountries[index].localizedName(widget.languageCode),
+                    style: widget.style?.countryNameStyle ?? const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  trailing: Radio<Country>(
+                    value: _filteredCountries[index],
+                    groupValue: _selectedCountry,
+                    onChanged: (value) {
+                      _selectedCountry = value!;
+                      setState(() {});
+                    },
+                  ),
+                  onTap: () => setState(() {
+                    _selectedCountry = _filteredCountries[index];
+                  }),
+                ),
+
+                // widget.style?.listTileDivider ?? const Divider(thickness: 1),
+              ],
+            ),
+          ),
+        ),
+        Container(
+            width: mediaWidth,
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              color: Colors.grey[300],
+              border: Border.all(
+                color: Colors.grey[300]!,
+                width: 1,
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    widget.onCountryChanged(_selectedCountry);
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Done',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            )
+            // color: Colors.grey[300],
+            ),
+      ],
     );
   }
 }

@@ -1,6 +1,7 @@
 library intl_phone_field;
 
 import 'dart:async';
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -357,24 +358,38 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
 
   Future<void> _changeCountry() async {
     filteredCountries = _countryList;
-    await showDialog(
+    showBottomSheet(
       context: context,
-      useRootNavigator: false,
-      builder: (context) => StatefulBuilder(
-        builder: (ctx, setState) => CountryPickerDialog(
-          languageCode: widget.languageCode.toLowerCase(),
-          style: widget.pickerDialogStyle,
-          filteredCountries: filteredCountries,
-          searchText: widget.searchText,
-          countryList: _countryList,
-          selectedCountry: _selectedCountry,
-          onCountryChanged: (Country country) {
-            _selectedCountry = country;
-            widget.onCountryChanged?.call(country);
-            setState(() {});
-          },
-        ),
-      ),
+      backgroundColor: Colors.white,
+      // useRootNavigator: false,
+      enableDrag: true,
+      elevation: 6,
+
+      builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.5,
+          minChildSize: 0.25,
+          maxChildSize: 0.9,
+          expand: false,
+          builder: (
+            BuildContext context,
+            ScrollController scrollController,
+          ) {
+            return StatefulBuilder(
+              builder: (ctx, setState) => CountryPickerDialog(
+                languageCode: widget.languageCode.toLowerCase(),
+                style: widget.pickerDialogStyle,
+                filteredCountries: filteredCountries,
+                searchText: widget.searchText,
+                countryList: _countryList,
+                selectedCountry: _selectedCountry,
+                onCountryChanged: (Country country) {
+                  _selectedCountry = country;
+                  widget.onCountryChanged?.call(country);
+                  setState(() {});
+                },
+              ),
+            );
+          }),
     );
     if (mounted) setState(() {});
   }
