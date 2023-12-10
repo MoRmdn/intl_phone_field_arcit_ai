@@ -250,8 +250,25 @@ class IntlPhoneField extends StatefulWidget {
   /// If null, default magnification configuration will be used.
   final TextMagnifierConfiguration? magnifierConfiguration;
 
+  final bool selectPhone;
+
+  final Color? radioActiveColor;
+  final MaterialStateProperty<Color?>? radioFillColor;
+  final Color? radioFocusColor;
+  final Color? radioHoverColor;
+  final MaterialStateProperty<Color?>? radioOverlayColor;
+  final TextStyle? countryNameStyle;
+  final Widget header;
+  final double? headerHeight;
+  final Widget subTitle;
+  final Widget cancelButton;
+  final Widget doneButton;
+  final double? bottomHight;
+  final EdgeInsetsGeometry? padding;
+
   const IntlPhoneField({
     Key? key,
+    required this.selectPhone,
     this.formFieldKey,
     this.initialCountryCode,
     this.languageCode = 'en',
@@ -297,6 +314,19 @@ class IntlPhoneField extends StatefulWidget {
     this.pickerDialogStyle,
     this.flagsButtonMargin = EdgeInsets.zero,
     this.magnifierConfiguration,
+    this.radioActiveColor,
+    this.radioFillColor,
+    this.radioFocusColor,
+    this.radioHoverColor,
+    this.radioOverlayColor,
+    this.countryNameStyle,
+    required this.header,
+    this.headerHeight,
+    required this.subTitle,
+    required this.cancelButton,
+    required this.doneButton,
+    this.bottomHight,
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -358,39 +388,62 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
 
   Future<void> _changeCountry() async {
     filteredCountries = _countryList;
-    showBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      // useRootNavigator: false,
-      enableDrag: true,
-      elevation: 6,
-
-      builder: (context) => DraggableScrollableSheet(
-          initialChildSize: 0.5,
-          minChildSize: 0.25,
-          maxChildSize: 0.9,
-          expand: false,
-          builder: (
-            BuildContext context,
-            ScrollController scrollController,
-          ) {
-            return StatefulBuilder(
-              builder: (ctx, setState) => CountryPickerDialog(
-                languageCode: widget.languageCode.toLowerCase(),
-                style: widget.pickerDialogStyle,
-                filteredCountries: filteredCountries,
-                searchText: widget.searchText,
-                countryList: _countryList,
-                selectedCountry: _selectedCountry,
-                onCountryChanged: (Country country) {
-                  _selectedCountry = country;
-                  widget.onCountryChanged?.call(country);
-                  setState(() {});
-                },
-              ),
-            );
-          }),
-    );
+    showModalBottomSheet(
+        barrierColor: Colors.black.withOpacity(0.5),
+        context: context,
+        isDismissible: false,
+        // backgroundColor: Colors.transparent,
+        // constraints: BoxConstraints(
+        //   maxHeight: MediaQuery.of(context).size.height * 0.9,
+        //   minHeight: MediaQuery.of(context).size.height * 0.5,
+        // ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+        ),
+        // useRootNavigator: false,
+        isScrollControlled: true,
+        enableDrag: true,
+        elevation: 6,
+        useSafeArea: true,
+        builder: (context) => DraggableScrollableSheet(
+              initialChildSize: 0.6,
+              minChildSize: 0.25,
+              maxChildSize: 0.9,
+              expand: false,
+              builder: (
+                BuildContext context,
+                ScrollController scrollController,
+              ) {
+                return CountryPickerDialog(
+                  languageCode: widget.languageCode.toLowerCase(),
+                  filteredCountries: filteredCountries,
+                  countryList: _countryList,
+                  selectedCountry: _selectedCountry,
+                  selectPhone: widget.selectPhone,
+                  radioActiveColor: widget.radioActiveColor,
+                  radioFillColor: widget.radioFillColor,
+                  radioFocusColor: widget.radioFocusColor,
+                  radioHoverColor: widget.radioHoverColor,
+                  radioOverlayColor: widget.radioOverlayColor,
+                  onCountryChanged: (Country country) {
+                    _selectedCountry = country;
+                    widget.onCountryChanged?.call(country);
+                    setState(() {});
+                  },
+                  countryNameStyle: widget.countryNameStyle,
+                  header: widget.header,
+                  headerHeight: widget.headerHeight,
+                  subTitle: widget.subTitle,
+                  cancelButton: widget.cancelButton,
+                  doneButton: widget.doneButton,
+                  bottomHight: widget.bottomHight,
+                  padding: widget.padding,
+                );
+              },
+            ));
     if (mounted) setState(() {});
   }
 

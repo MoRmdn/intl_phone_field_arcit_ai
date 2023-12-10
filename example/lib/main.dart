@@ -19,6 +19,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData.light().copyWith(
+        bottomSheetTheme: BottomSheetThemeData(
+          surfaceTintColor: Colors.white,
+        ),
+      ),
       home: Scaffold(
         appBar: AppBar(
           title: Text('Phone Field Example'),
@@ -54,6 +59,9 @@ class _MyAppState extends State<MyApp> {
                   height: 10,
                 ),
                 IntlPhoneField(
+                  header: Container(),
+                  subTitle: Container(),
+                  selectPhone: true,
                   focusNode: focusNode,
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
@@ -68,6 +76,23 @@ class _MyAppState extends State<MyApp> {
                   onCountryChanged: (country) {
                     print('Country changed to: ' + country.name);
                   },
+                  cancelButton: Container(
+                    height: 40,
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.red,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text("Cancel", style: TextStyle(color: Colors.white)),
+                  ),
+                  doneButton: ElevatedButton(
+                    child: Text("Done"),
+                    onPressed: () {
+                      focusNode.unfocus();
+                    },
+                  ),
+                  bottomHight: 90,
                 ),
                 SizedBox(
                   height: 10,

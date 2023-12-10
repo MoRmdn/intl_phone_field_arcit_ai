@@ -11,14 +11,27 @@ class TestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Test Intl Phone Field',
-        home: Scaffold(
-          appBar: AppBar(title: const Text("")),
-          body: IntlPhoneField(
-            initialValue: phoneNumber,
-            initialCountryCode: countryCode,
+      title: 'Test Intl Phone Field',
+      home: Scaffold(
+        appBar: AppBar(title: const Text("")),
+        body: IntlPhoneField(
+          selectPhone: true,
+          initialValue: phoneNumber,
+          initialCountryCode: countryCode,
+          header: Container(),
+          subTitle: Container(),
+          cancelButton: ElevatedButton(
+            child: const Text("Cancel"),
+            onPressed: () {},
           ),
-        ));
+          doneButton: ElevatedButton(
+            child: const Text("Done"),
+            onPressed: () {},
+          ),
+          bottomHight: 90,
+        ),
+      ),
+    );
   }
 }
 
