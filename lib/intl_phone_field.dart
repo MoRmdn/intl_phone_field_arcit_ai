@@ -252,6 +252,7 @@ class IntlPhoneField extends StatefulWidget {
 
   // add by me for my project
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   final bool selectPhone;
   final Color? radioActiveColor;
@@ -325,6 +326,7 @@ class IntlPhoneField extends StatefulWidget {
     this.bottomHight,
     this.padding,
     this.prefixIcon,
+    this.suffixIcon,
     required this.selectPhone,
     required this.header,
     required this.subTitle,
@@ -476,6 +478,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
       magnifierConfiguration: widget.magnifierConfiguration,
       decoration: widget.decoration.copyWith(
         prefixIcon: widget.prefixIcon ?? _buildFlagsButton(),
+        suffixIcon: widget.suffixIcon,
         counterText: !widget.enabled ? '' : null,
       ),
       style: widget.style,
