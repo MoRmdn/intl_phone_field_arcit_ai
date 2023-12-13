@@ -250,8 +250,10 @@ class IntlPhoneField extends StatefulWidget {
   /// If null, default magnification configuration will be used.
   final TextMagnifierConfiguration? magnifierConfiguration;
 
-  final bool selectPhone;
+  // add by me for my project
+  final Widget? prefixIcon;
 
+  final bool selectPhone;
   final Color? radioActiveColor;
   final MaterialStateProperty<Color?>? radioFillColor;
   final Color? radioFocusColor;
@@ -268,7 +270,6 @@ class IntlPhoneField extends StatefulWidget {
 
   const IntlPhoneField({
     Key? key,
-    required this.selectPhone,
     this.formFieldKey,
     this.initialCountryCode,
     this.languageCode = 'en',
@@ -320,13 +321,15 @@ class IntlPhoneField extends StatefulWidget {
     this.radioHoverColor,
     this.radioOverlayColor,
     this.countryNameStyle,
-    required this.header,
     this.headerHeight,
+    this.bottomHight,
+    this.padding,
+    this.prefixIcon,
+    required this.selectPhone,
+    required this.header,
     required this.subTitle,
     required this.cancelButton,
     required this.doneButton,
-    this.bottomHight,
-    this.padding,
   }) : super(key: key);
 
   @override
@@ -458,7 +461,11 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
       textAlign: widget.textAlign,
       textAlignVertical: widget.textAlignVertical,
       cursorColor: widget.cursorColor,
-      onTap: widget.onTap,
+      onTap: widget.prefixIcon != null
+          ? () {
+              _changeCountry();
+            }
+          : widget.onTap,
       controller: widget.controller,
       focusNode: widget.focusNode,
       cursorHeight: widget.cursorHeight,
@@ -468,7 +475,7 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
       onFieldSubmitted: widget.onSubmitted,
       magnifierConfiguration: widget.magnifierConfiguration,
       decoration: widget.decoration.copyWith(
-        prefixIcon: _buildFlagsButton(),
+        prefixIcon: widget.prefixIcon ?? _buildFlagsButton(),
         counterText: !widget.enabled ? '' : null,
       ),
       style: widget.style,
