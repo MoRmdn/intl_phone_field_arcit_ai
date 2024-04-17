@@ -198,14 +198,25 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                 width: mediaWidth,
                 height: widget.bottomHight ?? 90,
                 padding: widget.padding,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   ),
-                  border: Border.all(
-                    color: const Color(0xffe9e8e8),
-                    width: 1,
+                  // delete bottom border
+                  border: Border(
+                    top: BorderSide(
+                      color: Color(0xffe9e8e8),
+                      width: 1,
+                    ),
+                    right: BorderSide(
+                      color: Color(0xffe9e8e8),
+                      width: 1,
+                    ),
+                    left: BorderSide(
+                      color: Color(0xffe9e8e8),
+                      width: 1,
+                    ),
                   ),
                 ),
                 child: Row(
