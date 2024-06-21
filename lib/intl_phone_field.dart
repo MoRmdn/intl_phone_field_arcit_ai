@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/helpers.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import './countries.dart';
 import './phone_number.dart';
@@ -393,62 +394,46 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
 
   Future<void> _changeCountry() async {
     filteredCountries = _countryList;
-    showModalBottomSheet(
-        barrierColor: Colors.black.withOpacity(0.5),
+    showBarModalBottomSheet(
         context: context,
-        isDismissible: false,
-        // backgroundColor: Colors.transparent,
-        // constraints: BoxConstraints(
-        //   maxHeight: MediaQuery.of(context).size.height * 0.9,
-        //   minHeight: MediaQuery.of(context).size.height * 0.5,
-        // ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
-          ),
-        ),
-        // useRootNavigator: false,
-        isScrollControlled: true,
-        enableDrag: true,
-        elevation: 6,
-        useSafeArea: true,
-        builder: (context) => DraggableScrollableSheet(
-              initialChildSize: 0.6,
-              minChildSize: 0.25,
-              maxChildSize: 0.9,
-              expand: false,
-              builder: (
-                BuildContext context,
-                ScrollController scrollController,
-              ) {
-                return CountryPickerDialog(
-                  languageCode: widget.languageCode.toLowerCase(),
-                  filteredCountries: filteredCountries,
-                  countryList: _countryList,
-                  selectedCountry: _selectedCountry,
-                  selectPhone: widget.selectPhone,
-                  radioActiveColor: widget.radioActiveColor,
-                  radioFillColor: widget.radioFillColor,
-                  radioFocusColor: widget.radioFocusColor,
-                  radioHoverColor: widget.radioHoverColor,
-                  radioOverlayColor: widget.radioOverlayColor,
-                  onCountryChanged: (Country country) {
-                    _selectedCountry = country;
-                    widget.onCountryChanged?.call(country);
-                    setState(() {});
-                  },
-                  countryNameStyle: widget.countryNameStyle,
-                  header: widget.header,
-                  headerHeight: widget.headerHeight,
-                  subTitle: widget.subTitle,
-                  cancelButton: widget.cancelButton,
-                  doneButton: widget.doneButton,
-                  bottomHight: widget.bottomHight,
-                  padding: widget.padding,
-                );
-              },
-            ));
+        builder: (BuildContext context) {
+          return DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.7,
+            minChildSize: 0.25,
+            maxChildSize: 0.9,
+            builder: (
+              BuildContext context,
+              ScrollController scrollController,
+            ) {
+              return CountryPickerDialog(
+                languageCode: widget.languageCode.toLowerCase(),
+                filteredCountries: filteredCountries,
+                countryList: _countryList,
+                selectedCountry: _selectedCountry,
+                selectPhone: widget.selectPhone,
+                radioActiveColor: widget.radioActiveColor,
+                radioFillColor: widget.radioFillColor,
+                radioFocusColor: widget.radioFocusColor,
+                radioHoverColor: widget.radioHoverColor,
+                radioOverlayColor: widget.radioOverlayColor,
+                onCountryChanged: (Country country) {
+                  _selectedCountry = country;
+                  widget.onCountryChanged?.call(country);
+                  setState(() {});
+                },
+                countryNameStyle: widget.countryNameStyle,
+                header: widget.header,
+                headerHeight: widget.headerHeight,
+                subTitle: widget.subTitle,
+                cancelButton: widget.cancelButton,
+                doneButton: widget.doneButton,
+                bottomHight: widget.bottomHight,
+                padding: widget.padding,
+              );
+            },
+          );
+        });
     if (mounted) setState(() {});
   }
 
